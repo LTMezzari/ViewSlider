@@ -6,9 +6,9 @@ import android.view.*
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.page_slider.view.*
-import mezzari.torres.lucas.viewslider.widget.manager.VerticalLayoutManager
-import mezzari.torres.lucas.viewslider.widget.ViewSlider
-import mezzari.torres.lucas.viewslider.widget.manager.HorizontalLayoutManager
+import mezzari.torres.lucas.view_slider.manager.VerticalLayoutManager
+import mezzari.torres.lucas.view_slider.ViewSlider
+import mezzari.torres.lucas.view_slider.manager.HorizontalLayoutManager
 
 class MainActivity : AppCompatActivity() {
 
@@ -38,8 +38,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private var layoutManager: ViewSlider.LayoutManager =
-        HorizontalLayoutManager()
+    private var layoutManager: ViewSlider.LayoutManager = HorizontalLayoutManager()
     private val isHorizontal: Boolean get() {
         return layoutManager is HorizontalLayoutManager
     }
