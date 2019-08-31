@@ -169,7 +169,7 @@ class ViewSlider: FrameLayout {
             currentItemIndex = lastItemIndex
             currentView = sliderViews[lastViewIndex]
         } else {
-            for (i in 0 until sliderViews.size) {
+            for (i in sliderViews.indices) {
                 if (i >= adapter!!.itemCount) {
                     hasBlankOffset = true
                     break
@@ -218,51 +218,24 @@ class ViewSlider: FrameLayout {
     }
 
     private fun onStartDragging(x: Float, y: Float) {
-        intendedDirection = layoutManager!!.onStartDragging(x, y, width, height)
+        layoutManager!!.onStartDragging(x, y, width, height)
     }
 
     private fun onDragging(x: Float, y: Float) {
-        if (intendedDirection == Direction.NEXT) {
-            layoutManager?.onDragging(intendedDirection, currentView, nextView, x, y)
-            nextView?.run {
-                currentView?.post {
-                    updateViewLayout(currentView, currentView!!.layoutParams)
-                }
-                post {
-                    updateViewLayout(this, this.layoutParams)
-                }
-            }
-        } else if (intendedDirection == Direction.PREVIOUS) {
-            layoutManager?.onDragging(intendedDirection, currentView, previousView, x, y)
-            previousView?.run {
-                currentView?.post {
-                    updateViewLayout(currentView, currentView!!.layoutParams)
-                }
-                post {
-                    updateViewLayout(this, this.layoutParams)
-                }
-            }
-        }
+        layoutManager?.onDragging(currentView, previousView, nextView, x, y)
     }
 
     private fun onStopDragging(x: Float, y: Float) {
+        intendedDirection = layoutManager?.onEndDragging(currentView, previousView, nextView, x, y, width, height)
+            ?: Direction.NONE
+
         when {
             intendedDirection == Direction.NEXT -> {
-                val shouldMoveForward = layoutManager?.onEndDragging(intendedDirection, currentView, nextView, x, y, width, height)
-                if (shouldMoveForward == true) {
-                    goToNextView()
-                } else {
-                    layoutManager?.resetViewsPosition(currentView, previousView, nextView, width, height)
-                }
+                goToNextView()
             }
 
             intendedDirection == Direction.PREVIOUS && x > width / 3 -> {
-                val shouldMoveForward = layoutManager?.onEndDragging(intendedDirection, currentView, previousView, x, y, width, height)
-                if (shouldMoveForward == true) {
-                    goToPreviousView()
-                } else {
-                    layoutManager?.resetViewsPosition(currentView, previousView, nextView, width, height)
-                }
+                goToPreviousView()
             }
 
             else -> {
@@ -354,11 +327,10 @@ class ViewSlider: FrameLayout {
         }
 
         abstract fun setUpInitialPosition(view: View, width: Int, height: Int, position: Int, totalOffset: Int)
-        abstract fun onStartDragging(x: Float, y: Float, width: Int, height: Int):
-                Direction
-        abstract fun onDragging(direction: Direction, currentView: View?, draggedView: View?, x: Float, y: Float)
-        abstract fun onEndDragging(direction: Direction, currentView: View?, draggedView: View?, x: Float, y: Float, width: Int, height: Int)
-                : Boolean
+        abstract fun onStartDragging(x: Float, y: Float, width: Int, height: Int)
+        abstract fun onDragging(currentView: View?, previousView: View?, nextView: View?, x: Float, y: Float)
+        abstract fun onEndDragging(currentView: View?, previousView: View?, nextView: View?, x: Float, y: Float, width: Int, height: Int)
+                : Direction
         abstract fun resetViewsPosition(currentView: View?, previousView: View?, nextView: View?, width: Int, height: Int)
 
         fun notifyStateChanged() {

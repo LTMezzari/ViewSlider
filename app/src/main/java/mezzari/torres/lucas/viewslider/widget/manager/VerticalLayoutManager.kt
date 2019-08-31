@@ -20,67 +20,62 @@ class VerticalLayoutManager(isReversed: Boolean = false): ViewSlider.LayoutManag
         view.y = nextYPosition
     }
 
-    override fun onStartDragging(x: Float, y: Float, width: Int, height: Int): ViewSlider.Direction {
+    override fun onStartDragging(x: Float, y: Float, width: Int, height: Int) {
         initialTouchY = y
-        return when {
-            y > height / 2 -> {
-                ViewSlider.Direction.NEXT
-            }
-            y < height / 2 -> {
-                ViewSlider.Direction.PREVIOUS
-            }
-            else -> {
-                ViewSlider.Direction.NONE
-            }
-        }
     }
 
     override fun onDragging(
-        direction: ViewSlider.Direction,
         currentView: View?,
-        draggedView: View?,
+        previousView: View?,
+        nextView: View?,
         x: Float,
         y: Float
     ) {
-        if (direction == ViewSlider.Direction.NEXT) {
-            draggedView?.run {
+        if (initialTouchY > y) {
+            nextView?.run {
                 currentView?.y = 0 + (y - initialTouchY)
                 this.y = height + (y - initialTouchY)
+
+                currentView?.invalidate()
+                invalidate()
             }
-        } else if (direction == ViewSlider.Direction.PREVIOUS) {
-            draggedView?.run {
+        } else if (initialTouchY < y) {
+            previousView?.run {
                 currentView?.y = 0 + (y - initialTouchY)
                 this.y = -height + (y - initialTouchY)
+
+                currentView?.invalidate()
+                invalidate()
             }
         }
     }
 
     override fun onEndDragging(
-        direction: ViewSlider.Direction,
         currentView: View?,
-        draggedView: View?,
+        previousView: View?,
+        nextView: View?,
         x: Float,
         y: Float,
         width: Int,
         height: Int
-    ): Boolean {
+    ): ViewSlider.Direction {
         return when {
-            direction == ViewSlider.Direction.NEXT && y < height / 2 -> {
-                draggedView?.run {
+            initialTouchY > y && y < height / 2 -> {
+                nextView?.run {
                     currentView?.animate()?.y(-height.toFloat())
                     this.animate().y(0F)
                 }
-                true
+                ViewSlider.Direction.NEXT
             }
-            direction == ViewSlider.Direction.PREVIOUS && y > height / 2 -> {
-                draggedView?.run {
+            initialTouchY < y && y > height / 2 -> {
+                previousView?.run {
                     currentView?.animate()?.y(height.toFloat())
                     this.animate().y(0F)
                 }
-                true
+                ViewSlider.Direction.PREVIOUS
             }
             else -> {
-                false
+                ViewSlider.Direction.NONE
             }
         }
     }
