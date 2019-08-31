@@ -1,4 +1,4 @@
-package mezzari.torres.lucas.viewslider.widget
+package mezzari.torres.lucas.view_slider
 
 import android.content.Context
 import android.util.AttributeSet
@@ -7,7 +7,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
-import mezzari.torres.lucas.viewslider.R
+import mezzari.torres.lucas.view_slider.R
 
 /**
  * @author Lucas T. Mezzari

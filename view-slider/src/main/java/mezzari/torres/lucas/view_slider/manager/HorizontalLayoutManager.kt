@@ -1,7 +1,7 @@
-package mezzari.torres.lucas.viewslider.widget.manager
+package mezzari.torres.lucas.view_slider.manager
 
 import android.view.View
-import mezzari.torres.lucas.viewslider.widget.ViewSlider
+import mezzari.torres.lucas.view_slider.ViewSlider
 
 /**
  * @author Lucas T. Mezzari
