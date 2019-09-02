@@ -187,6 +187,26 @@ class ViewSlider: FrameLayout {
             setupViews()
     }
 
+    override fun onInterceptTouchEvent(ev: MotionEvent?): Boolean {
+        return when (ev?.actionMasked) {
+            MotionEvent.ACTION_DOWN -> {
+                true
+            }
+
+            MotionEvent.ACTION_MOVE -> {
+                isDragging
+            }
+
+            MotionEvent.ACTION_UP -> {
+                isDragging
+            }
+
+            else -> {
+                false
+            }
+        }
+    }
+
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         when (event?.actionMasked) {
             MotionEvent.ACTION_DOWN -> {
